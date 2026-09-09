@@ -1,0 +1,1 @@
+from app.dependencies import get_pick_task_repository, get_warehouse_service

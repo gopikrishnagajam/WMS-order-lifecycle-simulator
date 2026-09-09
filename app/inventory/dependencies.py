@@ -1,0 +1,1 @@
+from app.dependencies import get_inventory_repository

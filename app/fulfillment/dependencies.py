@@ -1,0 +1,1 @@
+from app.dependencies import get_fulfillment_service, get_shipment_repository

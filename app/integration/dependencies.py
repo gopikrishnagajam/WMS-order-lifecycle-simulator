@@ -1,0 +1,1 @@
+from app.dependencies import get_integration_message_repository, get_integration_service

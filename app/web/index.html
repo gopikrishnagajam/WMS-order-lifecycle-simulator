@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WMS Control Room</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">WMS</div>
+    <div>
+      <p class="eyebrow">Order lifecycle simulator</p>
+      <h1>Control room</h1>
+    </div>
+    <div class="topbar-actions">
+      <span id="database-status" class="connection-status">Checking database</span>
+      <button id="refresh-button" class="button button-quiet" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="metrics" aria-label="Operations summary">
+      <div class="metric"><span>Orders</span><strong id="metric-orders">0</strong></div>
+      <div class="metric"><span>Open picks</span><strong id="metric-picks">0</strong></div>
+      <div class="metric"><span>Available units</span><strong id="metric-available">0</strong></div>
+      <div class="metric"><span>Pending messages</span><strong id="metric-messages">0</strong></div>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="workspace-grid">
+      <aside class="panel intake-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">OMS intake</p>
+            <h2>Create order</h2>
+          </div>
+          <span class="step-number">01</span>
+        </div>
+        <form id="order-form">
+          <label>External order ID<input id="external-order-id" name="external_order_id" required></label>
+          <div class="form-row">
+            <label>Warehouse
+              <select id="warehouse-id" name="warehouse_id">
+                <option value="WH-01">WH-01</option>
+                <option value="WH-02">WH-02</option>
+              </select>
+            </label>
+            <label>Customer<input id="customer-id" name="customer_id" placeholder="Optional"></label>
+          </div>
+          <div class="form-row form-row-heading">
+            <span>Order lines</span>
+            <button id="add-line" class="text-button" type="button">+ Add line</button>
+          </div>
+          <div id="order-lines" class="line-editor"></div>
+          <label>Scenario
+            <select id="scenario-mode">
+              <option value="full">Full pick</option>
+              <option value="short">Short pick</option>
+            </select>
+          </label>
+          <button class="button button-primary button-wide" type="submit">Create and allocate</button>
+        </form>
+        <div class="hint-row"><span class="dot dot-blue"></span><span>Allocation creates a warehouse pick task.</span></div>
+      </aside>
+
+      <section class="panel flow-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Selected order</p>
+            <h2 id="selected-order-title">Choose an order</h2>
+          </div>
+          <span id="selected-order-status" class="status status-muted">Idle</span>
+        </div>
+        <div id="flow-empty" class="empty-state">Create an order or select one from the queue.</div>
+        <div id="flow-content" class="hidden">
+          <div id="order-summary" class="order-summary"></div>
+          <div id="lifecycle" class="lifecycle"></div>
+          <div id="flow-action" class="flow-action"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel queue-panel">
+      <div class="panel-heading panel-heading-inline">
+        <div>
+          <p class="eyebrow">Persistence view</p>
+          <h2>Operations queue</h2>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="orders" type="button">Orders</button>
+          <button class="tab" data-tab="inventory" type="button">Inventory</button>
+          <button class="tab" data-tab="picks" type="button">Picks</button>
+          <button class="tab" data-tab="shipments" type="button">Shipments</button>
+          <button class="tab" data-tab="integration" type="button">Integration</button>
+        </div>
+      </div>
+      <div id="queue-content"></div>
+    </section>
+
+    <section class="panel trace-panel">
+      <div class="panel-heading panel-heading-inline">
+        <div>
+          <p class="eyebrow">Endpoint trace</p>
+          <h2>Latest response</h2>
+        </div>
+        <span id="trace-route" class="trace-route">No request yet</span>
+      </div>
+      <pre id="trace-output">Select an operation to inspect its response.</pre>
+    </section>
+  </main>
+
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Python and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+htmlcov/
+.coverage
+dist/
+build/
+*.egg-info/
+
+# Local configuration and secrets
+.env*
+*.env
+*.local
+*.secret
+secrets/
+
+# Private project notes
+PROJECT_PRIVATE.md
+context.txt
+private/
+*.private.md

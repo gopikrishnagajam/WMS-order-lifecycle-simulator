@@ -1,0 +1,2 @@
+"""Integration message simulation behavior."""
+
