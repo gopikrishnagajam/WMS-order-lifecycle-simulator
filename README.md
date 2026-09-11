@@ -2,9 +2,9 @@
 
 ![WMS operator console](stock_images/order-lifecycle.png)
 
-A small, runnable Warehouse Management System (WMS) simulator for learning how an order moves from an Order Management System (OMS) into warehouse execution and back as a shipment confirmation.
+A small, runnable Warehouse Management System (WMS) simulator for learning two skills that matter together: how an order moves from an Order Management System (OMS) into warehouse execution and how to prove what happened with SQL when the lifecycle gets messy.
 
-It combines a FastAPI REST API, persistent PostgreSQL storage, Alembic migrations, Docker Compose, and a focused operator console. The result is an environment you can run locally, test end to end, and explain clearly in an integration or WMS interview.
+It combines a FastAPI REST API, persistent PostgreSQL storage, Alembic migrations, Docker Compose, a focused operator console, and practical troubleshooting queries. The result is an environment you can run locally, test end to end, investigate from the database, and explain clearly in an integration or WMS interview.
 
 ## Why This Repository Exists
 
@@ -20,6 +20,8 @@ That boundary creates useful engineering problems that are easy to describe but 
 - state must survive an application restart
 
 This project keeps the domain intentionally small. It is not a commercial WMS replacement; it is a compact learning and demonstration system for order orchestration, inventory control, fulfillment state, persistence, and integration reliability.
+
+The database is intentionally part of the learning surface. In real WMS work, the most useful person in the room is often the one who can connect the business symptom to the right tables: which order line allocated stock, which pick task shorted, which shipment was created, which confirmation message failed, and which correlation ID ties the story together.
 
 ## What A WMS Does
 
@@ -59,6 +61,23 @@ The WMS simulator is designed to:
 - Prevent duplicate processing with idempotency
 - Send unrecoverable messages to a mock dead-letter queue
 - Use logs and correlation IDs for troubleshooting
+- Use SQL to investigate lifecycle, inventory, short-pick, shipment, retry, and DLQ problems
+
+## SQL Troubleshooting As A First-Class Skill
+
+Order lifecycle tells you what should happen. SQL troubleshooting teaches you how to prove what did happen.
+
+That distinction matters in warehouse systems because operational issues rarely arrive as clean technical tickets. They arrive as questions like:
+
+- "Why did this OMS order not allocate?"
+- "Was this short pick resolved correctly?"
+- "Did we ship the picked quantity or the requested quantity?"
+- "Why does the WMS show shipped but the OMS does not?"
+- "Which retry or DLQ message belongs to this customer order?"
+
+This project treats those questions as core WMS knowledge, not as an afterthought. The tables are named after the operational flow, important identifiers are persisted, and correlation IDs travel across orders, pick tasks, shipments, integration messages, and dead-letter records.
+
+The runbook in [Troubleshooting SQL](docs/TROUBLESHOOTING_SQL.md) gives five investigation scenarios that move from business problem to SQL query to interpretation to the next system or process to inspect.
 
 ## Tech Stack
 
@@ -137,6 +156,7 @@ Completed so far:
 - Permanent failure routing to a mock dead-letter queue
 - Correlation ID response headers
 - Structured JSON lifecycle logs
+- SQL troubleshooting runbook for lifecycle and integration investigations
 - Swagger/OpenAPI request examples
 - Repeatable demo scripts
 - SQLAlchemy database models and repositories
@@ -355,6 +375,7 @@ GET /integration/dlq
 
 - [Architecture Walkthrough](docs/ARCHITECTURE.md)
 - [Demo Scenarios](docs/DEMO_SCENARIOS.md)
+- [Troubleshooting SQL](docs/TROUBLESHOOTING_SQL.md)
 - [Development Tracker](docs/DEVELOPMENT_TRACKER.md)
 
 Open the operator console:
